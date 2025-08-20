@@ -1,0 +1,65 @@
+---
+title: ✌🏻 Sum
+---
+
+#### Two Sum Problem: The Ultimate Dating App Algorithm 💕
+
+### The Story
+
+- Imagine you're a matchmaker for numbers! Your job is to find two numbers in an array that add up to a target value. It's like Tinder, but for math.
+
+### The Drama 🎬
+
+- **Naive Approach :** Let me check for **EVERY** possible pair! _O(n²) complexity enters the chat_ 😱
+- **Smart Approach :** I will use a **Map** as my little black book! _O(n) complexity winks_ 😎
+
+### The Algorithm (aka "The Wingman Strategy")
+
+- **Meet and Greet :** Walk through the array one number at a time.
+- **Calculate Compatibility :** For each number, calculate what its "perfect match" would be `(target - curr_number)`
+- **Check Your Contacts :** Look into your Map to see if you've already met this perfect match.
+- **Match Found :** If yes, return both indices and play Cupid 💘
+- **Add to Contacts :** If no, add current number to your Map and keep searching.
+
+### The Punchline 🤡
+
+```
+// Before: "I need to check everyone with everyone!"
+// After: "I remember everyone I've met, so I only need one pass!"
+```
+
+### Fun Fact
+
+- Your solution return `[-1, -1]` if no pair found, which is like saying, _"Sorry, no match found on this dating app!"_
+
+### Memory Palace 🧠
+
+- **Map =** Your contact list (remember who you've seen)
+- **diff =** The Perfect partner you were looking for!
+- **One pass =** Speed dating efficiency!
+
+##### _Complexity : O(n) time and O(n) space - because being efficient is sexy!_ ✨
+
+### The Actual Code (Your Masterpiece) 🎨
+
+```
+    const twoSum = (nums, target) => {
+        let map = new Map()
+        for(let i =0; i<nums.length; i++){
+            let diff = target - nums[i]
+            if(map.has(diff)){
+                return [map.get(diff), i]
+            }
+            map.set(nums[i], i)
+        }
+        return [-1, -1]
+    }
+```
+
+### Test Drive 🚗
+
+```
+// Example: nums = [2,7,11,15], target = 9
+// Step 1: See 2, looking for 7, don't have 7 yet → save 2
+// Step 2: See 7, looking for 2, found 2 at index 0! → return [0,1] 🎯
+```

@@ -1,0 +1,99 @@
+---
+title: React Hooks
+---
+
+# React `useEffect` Hook:
+
+---
+
+## 📌 What is `useEffect`?
+
+- A Hook that lets you perform **side effects** in functional components.
+- Side effects are operations to interact with outside world or don't directly relate to rendering the UI.
+- Replaces lifecycle methods like `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount` in class components.
+
+**Common Side Effects:**
+
+- Data fetching (API calls)
+- Subscriptions (WebSockets, Event Listeners)
+- Timers / Intervals
+- Manual DOM manipulations
+
+---
+
+## 📌 How Dependency Array Works
+
+| Dependency Array | Effect Trigger                                |
+| ---------------- | --------------------------------------------- |
+| `[]`             | Runs **once** after initial render (on mount) |
+| `[dep]`          | Runs on mount + when `dep` changes            |
+| _(No array)_     | Runs after **every render**                   |
+
+---
+
+## 📌 Cleanup Function in `useEffect`
+
+- Returns a function that runs:
+  - **Before component unmounts**
+  - **Before next effect if dependencies change**
+
+**Used For:**
+
+- Clearing intervals or timeouts
+- Unsubscribing from events
+- Cancelling API calls (AbortController)
+
+```jsx
+useEffect(() => {
+  const interval = setInterval(() => console.log("Timer Running"), 1000);
+
+  return () => {
+    clearInterval(interval); // Cleanup before unmount or next re-run
+  };
+}, []);
+```
+
+---
+
+## 📌 Handling Async Code in `useEffect`
+
+- `useEffect` cannot be directly `async`
+
+```jsx
+useEffect(() => {
+  async function fetchData() {
+    const res = await fetch("https://api.example.com/data");
+    const json = await res.json();
+    console.log(json);
+  }
+  fetchData();
+}, []);
+```
+
+---
+
+## 📌 Common Interview Questions & Best Practices
+
+- What happens if you leave dependency array empty?
+- How do you prevent infinite loops in `useEffect`?
+- When does the cleanup function run?
+- Why can't you make `useEffect` async directly?
+- How is `useEffect` different from `componentDidMount`?
+
+---
+
+## ✅ Best Practices Summary:
+
+- Always declare correct dependencies.
+- Use cleanup to prevent memory leaks.
+- Avoid unnecessary dependencies to prevent re-renders.
+- Understand when it runs and why.
+- Don't make `useEffect` async — use an inner function.
+
+---
+
+## 📝 Takeaway Answer for Interviews:
+
+> "The `useEffect` Hook allows me to handle side effects in React functional components.  
+> By controlling the dependency array, I decide when the effect runs.  
+> I also use the cleanup function to handle unsubscriptions or clear timers, preventing memory leaks."

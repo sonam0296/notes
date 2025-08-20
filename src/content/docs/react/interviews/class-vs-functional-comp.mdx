@@ -1,0 +1,109 @@
+---
+title: ⚛️ Class V/s Functional Component
+---
+
+### 🔹 1. Definition
+
+#### Class Component ->
+
+- Uses **ES6 classes**.
+- Must extends `React.Component`.
+- Needs `render()` method to render UI.
+- Eg:
+
+```
+  class ClassComponent extends React.Component{
+        render(){
+            return<h1>Hello! This is class component</h1>
+        }
+    }
+```
+
+#### Functional Component ->
+
+- Just a plain Javascript.
+- Takes props as an argument, returns JSX.
+- With **React Hooks**, we can manage states and lifecycle.
+- Eg:
+
+```
+const FunctionalComponent = (props) => {
+    return <h1>Hello! This is Functional Component </h1>
+}
+```
+
+### 🔹 2. State Management
+
+#### Class Component ->
+
+- Use `this.state` and `this.setState()`
+- ```
+    class Counter extends React.Component{
+        state = {count: 0}
+        increment = () => {
+            this.setState({count: this.state.count++})
+        }
+        render(){
+            return <button onClick={this.increment}>{this.state.count}</button>
+        }
+    }
+  ```
+
+#### Functional Component ->
+
+- Use `useState()` hook.
+- ```
+  const Counter = () => {
+      const [count, setCount] = React.useState(0)
+      const increment = () => {
+          setState(count++)
+      }
+      return(
+          <button onClick={increment}>{count}</button>
+      )
+  }
+  ```
+
+### 🔹 3. LifeCycle Methods
+
+#### Class Component -> LifeCycle Methods like :
+
+- `componentDidMount` (after render)
+- `componentDidUpdate` (after state/props update)
+- `componentWillUnmount` (after removal)
+- ```
+      class ClassComponent extends React.Component {
+        componentDidMount(){
+            console.log("Mounted")
+        }
+        componentDidUpdate() {
+            console.log("Updated")
+        }
+        componentWillUnmount(){
+            console.log("UnMounted")
+        }
+        render(){
+            return <p>Timer</p>
+        }
+  }
+  ```
+
+#### Functional Component ->
+
+- Use `useEffect`
+- ```
+  const FunctionalComponent = () => {
+    React.useEffect(()=>{
+        console.log('Mounted')
+        return ()=> console.log('Unmounting')
+    }, [])
+
+    return <p>Timer</p>
+  }
+  ```
+
+### Quick Interview Answer ->
+
+- _Class component uses ES6 classes with `this.state` and lifecycle methods. Functional Component are plain functions which uses
+  `useState` and `useEffect` hooks to manage states and lifecycle methods. Functional Component are simpler, cleaner and current
+  industry standard. Class component are still important to maintain legacy projects_.
