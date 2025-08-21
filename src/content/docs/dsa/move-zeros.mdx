@@ -1,0 +1,150 @@
+---
+title: Move 0's
+---
+
+#### Move Zeroes: The Great Zero Migration 🚚💨
+
+### The Story
+
+- You're organizing a library where all the empty spaces (zeroes) need to move to the back, but you must keep all the books (non-zero numbers) in their original order. It's like being a librarian with OCD! 📚
+
+### The Drama 🎬
+
+- **Naive Approach :** "Let me create a new array and copy things over!" _Extra space police sirens_ 🚨
+- **Smart Approach :** "I'll use two pointers to shuffle things in-place!" _O(1) space walks in like a boss_ 😎
+
+## The Naive/Brute Force Approach 🐌
+
+- _"When you overthink a simple problem"_
+-
+
+```
+    // The "I need extra space" approach
+    const moveZeroesNaive = (nums) => {
+        let result = []
+        let zeros = []
+        // First pass: Collect non-zeros and zeros separately
+        for(let i=0; i<nums.length; i++){
+            if(nums[i] !== 0){
+                result.push(nums[i])    // Non-zeros go first
+            }
+            else {
+                zeros.push(nums[i])     // Zeros go in separate pile
+            }
+        }
+        // Combine them
+        const finalArray = [...result, ...zeros]
+        // Copy back to original array (since we need to modify in-place)
+        for(let i=0; i<finalArray.length; i++){
+            nums[i] = finalArray[i]
+        }
+    }
+```
+
+- **What's wrong with this?**
+
+  - **Extra Space :** O(n) space for temporary arrays (like renting a storage unit to reorganize your closet!)
+  - **Multiple Passes :** We scan the array multiple times
+  - **Unnecessary Copying :** We create new arrays just to copy back
+
+- **Complexity:** O(n) time, O(n) space 😵
+
+### The Algorithm (aka "The Conveyor Belt Strategy")
+
+- 1. Setup Two Workers: One pointer (`left`) finds empty spots, another (`right`) finds books to move
+- 2. The Rules:
+
+     - `left` always points to the first zero (empty spot)
+     - `right` scans ahead looking for non-zero values (books)
+
+- 3.The Action: When `right` finds a book, swap it with the empty spot at `left`
+- 4. Keep Going: Continue until all books are moved forward and all empty spaces are at the end
+
+### The Punchline 🤡
+
+```
+// It's like having a bouncer who kicks out all the zeroes to the back of the club,
+// but lets all the VIP numbers keep their relative positions!
+```
+
+## The Two-Pointer Dance 💃🕺
+
+### **Method 1: The "Swap Dance"**
+
+```
+    const moveZeros = (nums) => {
+        let left = 0         // Points to first zero (empty spot)
+
+        for(let right = 0; right<nums.length; right++){
+            if(nums[right] !== 0){
+                [nums[left], nums[right]] = [nums[right], nums[left]]       // Found a non-zero! Swap with the empty spot
+                left++      // Move to next potential empty spot
+            }
+        }
+    }
+```
+
+**What's happening:**
+
+- `left` is like a parking spot reservation for non-zero values
+- Every time we find a non-zero, we "park" it at the `left` position
+- Zeroes naturally get pushed to the `right`!
+
+### **Method 1: The "Bulldozer Approach"**
+
+```
+var moveZeroes = function(nums) {
+    let writeIndex = 0;  // Where to place next non-zero
+
+    // First pass: Move all non-zeroes forward
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] !== 0) {
+            nums[writeIndex] = nums[i];
+            writeIndex++;
+        }
+    }
+
+    // Second pass: Fill remaining with zeroes
+    for (let i = writeIndex; i < nums.length; i++) {
+        nums[i] = 0;
+    }
+};
+```
+
+**What's happening:**
+
+- First, bulldoze all non-zero values to the front
+- Then, fill the rest with zeroes like painting a wall!
+
+### Test Drive 🚗
+
+```
+// Example: nums = [0,1,0,3,12]
+//
+// Using Method 1 (Swap Dance):
+// Initial: [0,1,0,3,12], left=0, right=0
+// right=0: nums[0]=0, skip
+// right=1: nums[1]=1≠0, swap with left=0 → [1,0,0,3,12], left=1
+// right=2: nums[2]=0, skip
+// right=3: nums[3]=3≠0, swap with left=1 → [1,3,0,0,12], left=2
+// right=4: nums[4]=12≠0, swap with left=2 → [1,3,12,0,0], left=3
+// Result: [1,3,12,0,0] ✨
+```
+
+### The Psychology 🧠
+
+- **Two Pointers Pattern:** Perfect for in-place array manipulation
+- **Stable Sort:** Non-zero elements maintain their relative order (like a gentle librarian)
+- **In-Place:** No extra space needed (like reorganizing your room without buying new furniture)
+
+### Complexity Report Card 📊
+
+- **Time:** O(n) - "I visit each element once, like a efficient postal worker"
+- **Space:** O(1) - "I work with what I've got, no extra storage needed"
+- **Stability:** ✅ - "Non-zero elements keep their original order, like a respectful queue"
+
+### Memory Palace 🏰
+
+- **left pointer =** The Organizer (always knows where the next item should go)
+- **right pointer =** The Scout (searches for items to organize)
+- **Swap =** The Magic Teleportation (instantly moves items to their proper place)

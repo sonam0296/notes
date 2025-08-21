@@ -1,4 +1,243 @@
 ---
-title: DSA
-description: A reference page in my new Starlight docs site.
+title: Array Patterns
 ---
+
+#### Array Patterns: Your Swiss Army Knife 🔧
+
+### 1. Two Pointers Pattern 👥
+
+- _"Meet in the middle" or "Chase each other"_
+- **When to Use :**
+  - Sorted Arrays
+  - Finding pairs/triplets
+  - Palindrome checks
+  - Reversing arrays
+- Eg:
+
+```
+    // Two sum on sorted array
+    const twoSumOnSortedArr = (nums, target) => {
+        let left = 0
+        let right = nums.length - 1
+        while(left < right){
+            const sum = nums[left] + nums[right]
+            if(sum == target) return [left, right];
+            else if(sum < target) left++;   // Need bigger sum
+            else right--;                   // Need smaller sum
+        }
+        return [-1, -1]
+    }
+```
+
+**Memory Trick :** _"Two friends walking towards each other until they meet!"_ 🚶‍♂️🚶‍♀️
+
+### 2. Sliding Window Pattern 🪟
+
+- _"Expand and contract your view"_
+- **When to Use :**
+  - Subarray Problem
+  - "Maximum/Minimum in window of size k"
+  - Longest/shortest substring problems
+- Eg:
+
+```
+    // Maximum sum of subarray size k
+    function maxSubarray(arr, k){
+        let windowSum = 0
+        // Build 1st window
+        for(let i=0; i<k; i++){
+            windowSum += nums[i]
+        }
+
+        let maxSum = windowSum
+        for(let i=k; i<nums.length - 1; i++){
+            windowSum += nums[i] - nums[i-k]     // add new , remove old
+            maxSum = Math.max(maxSum, windowSum)
+        }
+        return maxSum
+    }
+```
+
+**Memory Trick :** _"Looking through a window on a moving train!"_ 🚂
+
+### 3. Fast & Slow Pointers 🐢🐰
+
+- _"The Tortoise and the Hare"_
+- **When to Use :**
+  - Cycle detention
+  - Finding middle element
+  - Palindrome linked list
+- Eg:
+
+```
+   // Example: Find middle of array (conceptual)
+    function middleElement (arr){
+        let slow = 0;
+        let fast = 0
+        while(fast < nums.length - 1 && fast < nums.length - 2 ){
+            slow += 1       // Move 1 step
+            fast += 2       // Move 2 steps
+        }
+
+        return nums[slow]   // Slow is at middle!
+    }
+```
+
+**Memory Trick :** _"Slow and steady wins the race, but finds the middle!"_ 🏁
+
+### 4. Prefix Sum Pattern 📊
+
+- _"Remember where you came from"_
+- **When to Use :**
+  - Range sum queries
+  - Subarray sum problems
+  - When you need cumulative data
+- Eg:
+
+```
+// Example: Subarray sum equals K
+function subarraySum(nums, k) {
+    const prefixSumCount = new Map([[0, 1]]);  // Empty subarray
+    let prefixSum = 0;
+    let count = 0;
+
+    for (const num of nums) {
+        prefixSum += num;
+
+        // If (prefixSum - k) exists, we found a subarray!
+        if (prefixSumCount.has(prefixSum - k)) {
+            count += prefixSumCount.get(prefixSum - k);
+        }
+
+        // Record this prefix sum
+        prefixSumCount.set(prefixSum, (prefixSumCount.get(prefixSum) || 0) + 1);
+    }
+
+    return count;
+}
+```
+
+**Memory Trick :** "It's like keeping a running total of your bank account!" 💰
+
+### 5. Hash Map for Frequency/Lookup 🗂️
+
+- _"Your personal assistant who remembers everything"_
+- **When to Use :**
+  - Counting elements
+  - Finding duplicates
+  - Two Sum problems
+  - Anagram detection
+- Eg:
+
+```
+// Example: Find all anagrams in array
+function groupAnagrams(strs) {
+    const anagramMap = new Map();
+
+    for (const str of strs) {
+        const key = str.split('').sort().join('');  // Sorted = signature
+
+        if (!anagramMap.has(key)) {
+            anagramMap.set(key, []);
+        }
+        anagramMap.get(key).push(str);
+    }
+
+    return Array.from(anagramMap.values());
+}
+```
+
+**Memory Trick :** "Like organizing your closet by color!" 👕
+
+### 6. Merge Pattern 🤝
+
+- _"Bringing order to chaos"_
+- **When to Use :**
+  - Merging sorted arrays
+  - Merge sort implementation
+  - Combining results
+- Eg:
+
+```
+// Example: Merge two sorted arrays
+function mergeSorted(nums1, nums2) {
+    const result = [];
+    let i = 0, j = 0;
+
+    // Compare and merge
+    while (i < nums1.length && j < nums2.length) {
+        if (nums1[i] <= nums2[j]) {
+            result.push(nums1[i++]);
+        } else {
+            result.push(nums2[j++]);
+        }
+    }
+
+    // Add remaining elements
+    while (i < nums1.length) result.push(nums1[i++]);
+    while (j < nums2.length) result.push(nums2[j++]);
+
+    return result;
+}
+```
+
+**Memory Trick :** "Like merging two lines of people in order!" 🚶‍♂️🚶‍♀️
+
+### 7. Cyclic Sort Pattern 🔄
+
+- _"Everything in its right place"_
+- **When to Use :** - Arrays with numbers from 1 to n - Finding missing numbers - Finding duplicates in specific ranges
+  -Eg:
+
+```
+// Example: Find missing number (1 to n)
+function findMissingNumber(nums) {
+    let i = 0;
+
+    // Place each number at its correct position
+    while (i < nums.length) {
+        const correctPos = nums[i] - 1;
+        if (nums[i] !== nums[correctPos]) {
+            // Swap to correct position
+            [nums[i], nums[correctPos]] = [nums[correctPos], nums[i]];
+        } else {
+            i++;
+        }
+    }
+
+    // Find which position is wrong
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] !== i + 1) {
+            return i + 1;
+        }
+    }
+
+    return nums.length + 1;  // All present, missing is n+1
+}
+```
+
+**Memory Trick :** "Like putting numbered balls in numbered boxes!" 🏀
+
+### 🔹 Quick Reference Card 🎴
+
+| **Pattern**    | **Time** | **Space** | **When to Use**                  |
+| -------------- | -------- | --------- | -------------------------------- |
+| Two Pointers   | O(n)     | O(1)      | Sorted arrays, pairs             |
+| Sliding Window | O(n)     | O(1)      | Subarrays, fixed/variable window |
+| Fast & Slow    | O(n)     | O(1)      | Cycles, middle elements          |
+| Prefix Sum     | O(n)     | O(1)      | Range queries, cumulative data   |
+| Hash Map       | O(n)     | O(n)      | Frequency, lookups               |
+| Merge          | O(m+n)   | O(m+n)    | Combining sorted data            |
+| Cyclic Sort    | O(n)     | O(1)      | Numbers 1 to n problems          |
+
+### 🔹 The Golden Rule 🏆
+
+_"Choose your weapon based on the enemy!"_
+
+- **Sorted array?**→ Think Two Pointers
+- **Subarray/substring?** → Think Sliding Window
+- **Need to count/lookup?** → Think Hash Map
+- **Range/cumulative queries?** → Think Prefix Sum
+- **Numbers 1 to n?** → Think Cyclic Sort
+
+**Pro Tip:** Most problems combine 2-3 patterns! 🎯

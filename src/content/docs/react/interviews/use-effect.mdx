@@ -1,0 +1,120 @@
+---
+title: ⚛️ useEffect with Cleanup
+---
+
+### 🔹 What is useEffect?
+
+- `useEffect` lets you run side effects in React component.
+- Eg. of side effects: fetching data, setting timers, subscribing to events, manually updating the DOM.
+- It runs **after the render** .
+- Syntax :
+
+```
+    React.useEffect(()=>{
+        // side effect
+    }, [])
+```
+
+### 🔹 Why Cleanup?
+
+Some side effects (like timers, event listeners, or subscriptions) need to be removed when:
+
+- **1.** The component unmounts.
+- **2.** The effect re-runs due to dependency changes.
+
+If you don’t clean up → you get **memory leaks, duplicated listeners, or unwanted behavior**.
+
+### 🔹 Example 1: Cleanup with setInterval
+
+```
+    const Timer = () => {
+        const [count, setCount] = React.useState(0)
+
+        React.useEffect(()=>{
+            const id = setInterval(()=>{
+                setCount(c=> c+1)
+            }, 1000)
+
+            // Clean up funtion
+            return (()=>{
+                clearInterval(id)
+                console.log('Interval cleared')
+            })
+        }, []) // run once
+
+        return <h1>{count}</h1>
+    }
+```
+
+✅ Without cleanup → multiple intervals would run → counter increments too fast.
+
+### 🔹 Rules of Thumb
+
+- **If your effects sets something up, clean it up.**
+- Cleanup runs:
+  - 1. Before the component unmounts.
+  - 2. Before re-running the effect (when dependencies change).
+
+### 🔹 Quick Interview Answer
+
+👉 _"`useEffect` lets us perform side effects in React. If the effect creates something that lives outside React (like timers or subscriptions),
+we use cleanup function to remove it. This cleanup runs when the component unmounts or before the effect re-runs. Without cleanup we risk memory leaks and bugs🐞"_
+
+---
+
+## ⚛️ Cleanup Function in useEffect
+
+---
+
+### 🔹 What is it?
+
+- The **cleanup function** is the function you **return** from inside the `useEffect`.
+- It's job is to **undo** or **clean up** anything the effect set up.
+- Eg: remove listeners, clear timers, close connections, etc
+
+```
+useEffect(()=>{
+    // setup
+  const id = setInterval(() => {
+    console.log("Running...");
+  }, 1000);
+
+  // cleanup
+  return () => clearInterval(id);
+}, [])
+```
+
+### 🔹 When Does It Get Called?
+
+- **1. Before Component Unmounts 🗑️**
+
+  - When a component is about to removed from UI, React calls the cleanup function.
+  - Ensures no background work continues after the component is gone.
+  - 👉 Example: Clear `setInterval` when the component unmounts.
+
+- **2. Before running the Effect again (on dependency change) 🔄**
+
+  - If your `useEffect` depends on some state/props, React will:
+    - 1. Call the cleanup function from the **previous effect**.
+    - 2. Then run the effect with updated values.
+  - Eg:
+
+    ```
+    React.useEffect(()=>{
+    console.log('Subscribed to', userId)
+    return(()=>{console.log('Unsubscribed from ', userId)})
+    }, [userId])
+    ```
+
+  - If `userId` changes:
+    - Old cleanup runs first (`unsubscribe from old userId`)
+    - Then new effect runs (`subscribe to new userId`)
+
+- **3. Never Called if Component Renders Once and Never Unmounts**
+  - If you have `useEffect(..., [])` (no dependencies) and the component never unmounts, cleanup will only run at unmount.
+
+### 🔹 Why is it Important?
+
+- Prevents memory leaks
+- Avoids duplicate subscriptions
+- Keeps your app’s performance stable

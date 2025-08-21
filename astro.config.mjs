@@ -31,22 +31,23 @@ export default defineConfig({
               label: "Best Time to Buy and Sell Stock",
               slug: "dsa/best-time-to-buy-or-sell-stocks",
             },
+            { label: "Move Zeros", slug: "dsa/move-zeros" },
           ],
         },
         {
           label: "React",
           items: [
-            {
-              label: "Hooks",
-              items: [
-                { label: "", slug: "react/hooks/react-hooks" },
+            // {
+            //   label: "Hooks",
+            //   items: [
+            //     { label: "", slug: "react/hooks/react-hooks" },
 
-                // {
-                //   label: "useCallback",
-                //   slug: "react/hooks/use-callback",
-                // },
-              ],
-            },
+            //     // {
+            //     //   label: "useCallback",
+            //     //   slug: "react/hooks/use-callback",
+            //     // },
+            //   ],
+            // },
             {
               label: "Interview Questions",
               items: [
@@ -57,6 +58,10 @@ export default defineConfig({
                 {
                   label: "useState vs useRef vs useReducer",
                   slug: "react/interviews/usestate-useref-usereducer",
+                },
+                {
+                  label: "useEffect with Cleanup",
+                  slug: "react/interviews/use-effect",
                 },
               ],
             },
