@@ -1,0 +1,91 @@
+---
+title: ⚡ Event Loop in Browser JS vs Node.js
+---
+
+### 🔹 Common Concepts (Both)
+
+- **Call Stack** -> Executes functions (LIFO).
+- **Web/Node API's** -> Handle async works (timers, HTTP, events).
+- **Task Queues** -> Where async callbacks go before execution.
+- **Event loop** -> Decided when to move tasks from queues into the stacks.
+
+### 🔹 Browser JavaScript (Chrome, Firefox, etc.)
+
+- **Macrotasks (Task Queues)** :
+  - `setTimeout`, `setInterval`, DOM events, `setImmediate`(not in browser)
+- **Microtasks (Job Queues)** :
+  - `Promise.then`, `queueMicrotask`, MutationObserver.
+- **Priority Rule**:
+  - After each stack execution → run **all microtasks** → then move on to **one macrotask**.
+
+```
+    console.log("Start");
+    setTimeout(() => console.log("Timeout"), 0);
+    Promise.resolve().then(() => console.log("Promise"));
+    console.log("End");
+
+    // ✅ Output (Browser):
+    Start
+    End
+    Promise
+    Timeout
+```
+
+- 👉 Promise (microtask) runs before setTimeout (macrotask).
+
+### 🔹 Node.js Event Loop
+
+- Node.js uses `libuv` under the hood, and has extra phases in its event loop.
+- Event Loop Phases in Node:
+  - **Timer Phase** - Executes `setTimeout` & `setInterval`
+  - **Pending Callbacks** - Executes `I/O` callbacks.
+  - **Idle, Prepare** - Internal use.
+  - **Poll Phase** - Retrives new I/O events.
+  - **Check Phase** - Executes `setImmediate`
+  - **Close Callbacks** - Closes connection.
+- 💡 Node also has:
+
+  - Microtasks -> `Promise.then`, `queueMicrotask`
+  - process.nextTick -> Runs before **microtask** after every phase.
+
+- Priority in Node.js :
+  - process.nextTick
+  - Microtasks (Promises, callbacks)
+  - Macrotasks (timers, setImmediate, etc)
+- Example in Nodejs ->
+
+```
+    setTimeout(() => console.log("Timeout"), 0);
+    setImmediate(() => console.log("Immediate"));
+    Promise.resolve().then(() => console.log("Promise"));
+    process.nextTick(() => console.log("NextTick"));
+
+    // ✅ Output (Node.js):
+
+    NextTick
+    Promise
+    Timeout
+    Immediate
+```
+
+- 👉 Explanation:
+
+- `process.nextTick` → highest priority.
+- Then `Promise.then` (microtask).
+- Then `setTimeout` (timer phase).
+- Then `setImmediate` (check phase).
+
+### ⚡ Key Differences: Browser vs Node.js
+
+| Feature              | Browser JS                       | Node.js                                                 |
+| -------------------- | -------------------------------- | ------------------------------------------------------- |
+| Microtasks           | `Promise.then`, `queueMicrotask` | Same                                                    |
+| Macrotasks           | `setTimeout`, `setInterval`      | `setTimeout`, `setInterval`, `setImmediate`             |
+| Special Queue        | ❌ None                          | ✅ `process.nextTick` (higher priority than microtasks) |
+| Order of async tasks | Microtasks → Macrotasks          | `process.nextTick` → Microtasks → Macrotasks            |
+| Event loop phases    | Simpler                          | Multiple phases (timers, poll, check, close, etc.)      |
+
+### 🧠 Interview One-liners
+
+- _"In Browser"_ : Microtasks(Promises, callbacks) always run before macrotask(timers, setImmediate)
+- _"In Nodejs"_ : `process.nextTick` runs first, then `Promises` (microtasks), then `timers` and `setImmediate` depending on the phase.”

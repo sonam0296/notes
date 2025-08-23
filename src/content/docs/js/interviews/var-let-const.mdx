@@ -1,0 +1,55 @@
+---
+title: ⚡ var vs let vs const + Hoisting
+---
+
+### 🔹 1. `var`
+
+- **Function scoped** (or globally scoped if declared outside a function)
+- Can be **redeclared** and **updated**.
+- **Hoisted** : moved to top of scope but initialized as `undefined`.
+- Example:
+
+```
+    console.log(a)      // undefined (hoisted, but not initialized yet)
+    var a = '10'
+    console.log(a)      // a = '10'
+```
+
+### 🔹 2. `let`
+
+- **Block scoped** (inside {} braces)
+- Can be **updated** ,but not **redeclared** in the same scope.
+- **Hoisted** but in **Temporal Dead Zone (TDZ)** -> Can't access before declaration.
+- Example:
+
+```
+    // console.log(a)       // ❌ ReferenceError (TDZ)
+    let a = 10
+    console.log(a)          // 20
+```
+
+### 🔹 3. `const`
+
+- **Block scoped**
+- Must be **initialized** at declaration.
+- Can't be **reassigned** (but objects/arrays can still be mutated).
+- Example:
+
+```
+    // const a      // ❌ Error
+    const c = 20
+    // c = 10          // ❌ TypeError
+    const arr = [1,3]
+    arr.push(2)
+    console.log(arr)        // [1,3,2]
+```
+
+### 🔹 4. Hoisting Summary
+
+- var -> Hoisted + "initialized as `undefined`"
+- let/const -> Hoisted but in TDZ (cannot access until declared).
+
+👉 Interview One-liner:
+
+_"`var` is a function scoped and hoisted with `undefined`. `let` and `const` are block scope and hoisted but not until initialized(TDZ).
+`const` required initializaton and cannot be reassigned."_

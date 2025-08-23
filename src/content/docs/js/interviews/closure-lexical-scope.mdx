@@ -1,0 +1,67 @@
+---
+title: ⚡ Closures & Lexical Scope
+---
+
+### 🔹 1. Lexical Scope
+
+- Javascript uses **lexical (static) scoping**.
+- A function can access variable in its **own scope** or **outer scopes,** but not inner scopes.
+- Example:
+
+```
+    function outer(){
+        let a = 10
+        function inner(){
+            console.log(a)          // ✅ inner can access outer variable
+        }
+        inner()
+    }
+
+    outer().        // 10
+```
+
+### 🔹 2. Closure
+
+- A **Closure** is created when a function "remembers" variables from its **lexical scope**, even after the outer
+  function is finished.
+- Example:
+
+```
+    function makeCounter(){
+        let count = 10
+        return(()=>{ // inner function = closure
+            count++
+            return count
+        })
+    }
+
+    const counter = makeCounter()
+    console.log(counter())    // 11
+    console.log(counter())      // 12
+```
+
+👉 Here, counter1 still remembers count even though makeCounter has finished running.
+
+### 🔹 3. Real-world Use Cases
+
+- Data hiding/ Encapsulation
+  ```
+      function checkAccountBalance(){
+          let balance = 100
+          return{
+              deposit: (amt) => balance + amt;
+              getBalance: () => balance
+        }
+        const account = checkAccountBalance()
+        console.log(getBalance())       // 100
+        account.deposit(100)
+        console.log(getBalance())       // 200
+      }
+  ```
+- Event handlers / Callbacks
+- Memoization (caching results)
+
+### 🔹 4. Interview One-Liner
+
+_"A closure is when an inner function remembers and access the variables from its lexical scope, even after outer
+function is finished executing. Its useful for data privacy, callbacks and functional programming patterns."_

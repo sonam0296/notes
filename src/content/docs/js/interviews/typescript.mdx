@@ -1,0 +1,90 @@
+---
+title: TypeScript Basics
+---
+
+### ⚡ 1. any vs unknown
+
+```
+    let a: any = 10;
+    let b: unknown = 20;
+
+    let x: number = a; // ✅ works (unsafe)
+    let y: number = b; // ❌ Error: Type 'unknown' is not assignable to type 'number'
+```
+
+- ✅ any → turns off type checking (dangerous, bypasses safety).
+- ✅ unknown → must be type-checked or cast before use (safer).
+
+```
+    if (typeof b === "number") {
+    let y: number = b; // ✅ works now
+    }
+```
+
+### ⚡ 2. Type Narrowing
+
+```
+    function printId(id: string | number) {
+    if (typeof id === "string") {
+        console.log(id.toUpperCase()); // ✅ works
+    } else {
+        console.log(id.toFixed(2));    // ✅ works
+    }
+    }
+    printId("sonam"); // SONAM
+    printId(42);      // 42.00
+```
+
+- ✅ TypeScript uses **narrowing** (typeof, instanceof, in) to refine types inside blocks.
+
+### ⚡ 3. Interfaces vs Types
+
+- ✅ `interface` → extendable, best for objects.
+- ✅ `type` → can do unions, intersections.
+
+```
+    // Interface
+    interface User{
+        name: string,
+        id: number
+    }
+
+    type Employee = {
+        department: string,
+        role: string
+    }
+
+    // Intersection (extend multiples)
+    type Staff = User & Employee;
+    const s: Staff = {id: 1, name: "Sonam", role: "Dev", department: "IT"}
+```
+
+### ⚡ 4. Generics
+
+- ✅ Generics allow **reusable type-safe** functions.
+
+```
+    function identity<T>(value: T){
+        console.log(value)
+    }
+    identity(10)        // T : number
+    identity("Sonam")   // T : string
+```
+
+### ⚡ 5. Utility Types
+
+- ✅ TS provides built-in utilities to transform types.
+
+```
+    type Todo = {id: number, title: string, completed: boolean}
+    type PartialTodo = Partial<Todo>            // all props are optional
+    type PickTodo = Pick<Todo, "id" | "title">  // only id and title
+    type OmitTodo = Omit<Todo, "completed">     // all except completed
+```
+
+### 🧠 Quick Interview Takeaways
+
+- Use `unknown` over `any` for safety.
+- Narrowing is key to safe unions.
+- Generics + Utility Types = flexible, reusable code.
+- Discriminated unions = pattern matching in TS.

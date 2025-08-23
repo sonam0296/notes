@@ -1,0 +1,107 @@
+---
+title: ⚡ JS Prototypes & this Binding
+---
+
+### 🔹 1. What are Prototypes?
+
+- In Javascript:
+  - Every object has a hidden property called `[[Prototype]]` which can be accessed using `_proto_`
+  - When you access a property on an object, JS looks:
+    - 1. In the object itself.
+    - 2. If not found, it **delegates to its prototype chain**.
+  - Eg:
+    ```
+        const person = {name: "Sonam"}
+        console.log(person.toString())     // [object object]
+    ```
+  - ✅ `toString` is not defined in person, but JS finds it in `Object.prototype`.
+
+### 🔹 Prototype Inheritance
+
+```
+    function Person (name){
+        this.name = name
+    }
+
+    Person.prototype.sayHello = function (){
+        return `Hello from : ${this.name}`
+    }
+
+    const user = new Person('Sonam')
+    console.log(user.sayHello())
+```
+
+- ✅ `sayHello` is not copied to each object — it’s stored in prototype and shared.
+
+### 👉 Interview One-liner
+
+_“Prototypes allow objects to share methods without duplicating them in memory.”_
+
+### 🔹 2. `this` Binding
+
+- `this` depends on **how a function is called** ,not where it's defined.
+- Eg:
+
+```
+    Case 1: Global Scope
+    console.log(this)   // In browser → window, in Node → {}
+
+    Case 2 : Inside a method
+    const obj = {
+        a: 10,
+        getData: (){
+            console.log(this.a)
+        }
+    }
+    obj.getData()   // 10
+
+    ✅ this refers to the object calling the method (obj).
+
+    Case 3: Lost this (Common Pitfall)
+    const obj = {
+        a: 10,
+        getData: (){
+            console.log(this.a)
+        }
+    }
+    const fn = obj.getData
+    fn();                   // undefined (in strict mode)
+
+    ✅ Because now fn is just a function, not called on obj.
+
+    Case 4: this in Arrow Functions
+    const obj = {
+        name: "Sonam",
+        greet: () => {
+            console.log(this.name);
+        }
+    };
+    obj.greet(); // ❌ undefined
+
+    ✅ Arrow functions do not bind their own this.
+    They inherit this from the lexical scope (where they were created).
+```
+
+### ⚡ `function` vs `arrow function` → `this` Behavior
+
+| Aspect                                          | **Regular Function (`function`)**                     | **Arrow Function (`=>`)**                                                                        |
+| ----------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Own `this`?**                                 | ✅ Yes, `this` depends on how the function is called. | ❌ No, arrow functions do **not** bind `this`; they use `this` from the enclosing lexical scope. |
+| **Default `this` in global scope (non-strict)** | `window` (in browsers)                                | `window` (same as lexical scope)                                                                 |
+| **Default `this` in strict mode**               | `undefined`                                           | Inherits from enclosing scope                                                                    |
+| **Inside an object method**                     | Refers to the object that called it                   | ❌ Refers to outer scope (usually `window`/`undefined`)                                          |
+| **In a class method**                           | Refers to the instance                                | ❌ Still lexical `this` (not the instance unless wrapped)                                        |
+| **Can use `bind` / `call` / `apply`?**          | ✅ Yes                                                | ❌ No effect — arrow functions ignore binding                                                    |
+| **Best use case**                               | Object methods, class methods, dynamic `this`         | Callbacks, promises, event listeners (when you want to inherit surrounding `this`)               |
+
+### 🧠 Interview One-liner
+
+- **Regular function** → this is dynamic (depends on call).
+- **Arrow function** → this is lexical (depends on where defined).
+
+### 🧠 Quick Interview Takeaways
+
+- Prototype → Object inheritance mechanism.
+- `this` → Value depends on call site, not definition.
+- Arrow functions → no own `this`, use lexical scope.
+- `bind/call/apply` → Explicitly control `this`.

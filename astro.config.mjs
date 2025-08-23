@@ -15,13 +15,13 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        {
-          label: "Guides",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", slug: "guides/example" },
-          ],
-        },
+        // {
+        //   label: "Guides",
+        //   items: [
+        //     // Each item here is one entry in the navigation menu.
+        //     { label: "Example Guide", slug: "guides/example" },
+        //   ],
+        // },
         {
           label: "DSA Notes",
           items: [
@@ -35,19 +35,50 @@ export default defineConfig({
           ],
         },
         {
+          label: "JavaScript/TypeScript",
+          items: [
+            {
+              label: "Interview Questions",
+              items: [
+                {
+                  label: "var vs let vs const + Hoisting",
+                  slug: "js/interviews/var-let-const",
+                },
+                {
+                  label: "TypeScript Basics",
+                  slug: "js/interviews/typescript",
+                },
+                // {
+                //   label: "Event Loop",
+                //   slug: "js/interviews/event-loop",
+                // },
+                {
+                  label: "Prototypes & this Binding",
+                  slug: "js/interviews/prototyes-and-this",
+                },
+                {
+                  label: "Closures & Lexical Scope",
+                  slug: "js/interviews/closure-lexical-scope",
+                },
+                // {
+                //   label: "Prototypes & Inheritance",
+                //   slug: "js/interviews/prototypes-inheritance",
+                // },
+                // {
+                //   label: "Debounce & Throttle",
+                //   slug: "js/interviews/debounce-throttle",
+                // },
+                // {
+                //   label: "Call, Apply & Bind",
+                //   slug: "js/interviews/call-apply-bind",
+                // },
+              ],
+            },
+          ],
+        },
+        {
           label: "React",
           items: [
-            // {
-            //   label: "Hooks",
-            //   items: [
-            //     { label: "", slug: "react/hooks/react-hooks" },
-
-            //     // {
-            //     //   label: "useCallback",
-            //     //   slug: "react/hooks/use-callback",
-            //     // },
-            //   ],
-            // },
             {
               label: "Interview Questions",
               items: [
@@ -63,6 +94,32 @@ export default defineConfig({
                   label: "useEffect with Cleanup",
                   slug: "react/interviews/use-effect",
                 },
+                {
+                  label: "useMemo & useCallback",
+                  slug: "react/interviews/usememo-usecallback",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "NodeJS",
+          items: [
+            {
+              label: "Interview Questions",
+              items: [
+                {
+                  label: "Event Loop",
+                  slug: "node/interviews/event-loop",
+                },
+                // {
+                //   label: "useState vs useRef vs useReducer",
+                //   slug: "react/interviews/usestate-useref-usereducer",
+                // },
+                // {
+                //   label: "useEffect with Cleanup",
+                //   slug: "react/interviews/use-effect",
+                // },
               ],
             },
           ],
