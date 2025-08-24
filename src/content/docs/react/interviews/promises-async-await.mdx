@@ -1,0 +1,110 @@
+---
+title: Promises vs async/await
+---
+
+### 🔹 1. Promises
+
+- **A Promise** represents a value that will be available sometime in the future (either resolved or rejected).
+- Eg:
+
+```
+    function getData(){
+        const promise = new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                resolve("✅ Data received")
+            }, 100)
+        })
+        return promise
+    }
+
+    // consuming promise
+    getData().then((data)=> console.log(data)).catch((err)=> console.log(err))
+```
+
+- ✅ Pros:
+  - Better than **callbacks** (avoids callback hell).
+  - Can chain multiple async operations with `.then()`
+- ❌ Cons:
+  - Readability suffers with multiple `.then()` chains(becomes Promise hell).
+  - Error handling needs `.catch()` at the end.
+
+### Promise combinators
+
+- `Promise.all([p1, p2, ...])` → Runs all in parallel, resolves when all succeed, rejects if any one fails.
+- `Promise.allSettled([p1, p2, ...])` → Runs all in parallel, waits for all to finish, returns results (fulfilled or rejected).
+- `Promise.any([p1, p2, ...])` → Resolves as soon as any one succeeds, rejects only if all fail.
+- `Promise.race([p1, p2, ...])` → Resolves/rejects with the first promise that settles (success or failure).
+
+#### 👉 Think of it like:
+
+- `all` = all must win.
+- `allSettled` = report card of all.
+- `any` = first winner matters.
+- `race` = first finisher matters.
+
+### 🔹 2. Async/Await
+
+- `async/await` is a **syntactic sugar** on top of Promises -> makes async code looks like synchronous code.
+- Eg:
+
+```
+    const fetchData = async () => {
+        try{
+            const data = await getData()    // waits until resolved.
+            console.log(data)
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+    fetchData()
+```
+
+- ✅ Pros:
+  - Much cleaner & more readable (looks like synchronous code).
+  - Easier error handling with `try...catch`.
+  - Great when you have multiple async calls in sequence.
+- ❌ Cons:
+  - You must be inside `async` function to use `await`.
+  - If async calls can run in parallel, `await` might make them slower unless you use `Promise.all`.
+
+### 🔹 3. Parallel vs Sequential
+
+- 👉 Sequential execution (slower, but sometimes required):
+
+```
+    async function sequential() {
+        const a = await getData();
+        const b = await getData();
+        console.log(a, b);
+    }
+```
+
+- 👉 Parallel execution (faster):
+
+```
+    async function parallel() {
+        const [a, b] = await Promise.all([getData(), getData()]);
+        console.log(a, b);
+    }
+```
+
+### 🔹 4. Node.js vs Browser Context
+
+- **Node.js:** Often used for file system, database queries, API calls. Async/await is widely preferred for readability.
+
+- **Browser:** Promises and async/await are both used in fetch calls, event handling, etc.
+
+### 🔹 5. Summary Table
+
+| Feature            | Promises (`.then`)       | Async/Await (`await`)                |
+| ------------------ | ------------------------ | ------------------------------------ |
+| Readability        | Harder with chaining     | Cleaner, looks synchronous           |
+| Error Handling     | `.catch()`               | `try...catch`                        |
+| Parallel Execution | Easier with `.all`       | Use `Promise.all`                    |
+| Use Case           | When chaining simple ops | When dealing with complex async flow |
+
+- 👉 Think of it like this:
+  - **Promise** = “I’ll do it, call me back when I’m done.”
+  - **Async/Await** = “Wait here until I finish, then continue.”

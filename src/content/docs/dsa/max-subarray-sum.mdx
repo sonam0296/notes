@@ -1,0 +1,116 @@
+---
+title: Maximum Subarray Sum
+---
+
+### 🎮 Maximum Subarray = “The Treasure Journey”
+
+- Imagine, you're a traveller walking on a path of **villages**.
+- Each village has **gold (positive number)** or **bandits who rob you (negative number)**.
+- Your goal:
+  - 👉 Find the stretch of **consecutive villages** where your net gold is **maximized**.
+- The Journey:
+
+```
+// Array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+// Think: [😢, 😊, 😔, 😄, 😐, 😊, 😊, 😭, 😊]
+```
+
+### Key Points:
+
+- **Contiguous:** Elements must be next to each other (no skipping!)
+- **Subarray:** Can be the entire array, a portion, or even a single element
+- **Maximum Sum:** We want the biggest possible total
+
+### The Naive/Brute Force Approach 🐌
+
+_"Check every possible combination like a paranoid accountant"_
+
+```
+    const maxSubarrayNaive = (nums) => {
+        let maxSum = nums[0]
+
+        // Check every possible starting position
+        for(let i =0; i<nums.length; i++){
+            let currSum = nums[i]
+
+            // Check every possible ending position from i
+            for(j = i; j<nums.length; j++){
+                currentSum += nums[j]
+                maxSum = Math.max(maxSum, currentSum)
+            }
+        }
+        return maxSum
+    }
+```
+
+### How the journey works (Kadane’s rule):
+
+- You keep a bag of gold (`currSum` = current streak)
+- If your bag becomes negative (bandits took more than you have), 💡 Drop it on the ground(reset to 0),
+  because carrying debt will only hurt the next stretch.
+- You also keep track of your best gold so far (`maxSum`/`best`)
+- Example:
+  ```
+    Villages: [4, -1, 2, 1, -5, 4]
+    Start: Village 1 gives +4 gold → bag = 4 → best = 4
+    Village 2 robs -1 → bag = 3 → best = 4
+    Village 3 gives +2 → bag = 5 → best = 5
+    Village 4 gives +1 → bag = 6 → best = 6 🏆
+    Village 5 robs -5 → bag = 1 → best still 6
+    Village 6 gives +4 → bag = 5 → best still 6
+  ```
+- 👉 Best journey = [4, -1, 2, 1] with 6 gold.
+
+### Why this works (the mental hook ⚡️)
+
+- If your bag is **negative**, you're better off **dropping it** and starting fresh.
+- Otherwise, **keep extending**.
+- Always compare with **best stash ever found**.
+
+### The Actual Code (Your Masterpiece-> Kadane’s Algorithm) 🎨
+
+```
+    const maxSubarray(nums){
+        let curr = nums[0]
+        let best = nums[0]
+        for(let i=1; i<nums.length;i++){
+            const x = nums[i]
+            curr = Math.max(curr, x + curr)
+            best = Math.max(best, curr)
+        }
+        return best
+    }
+```
+
+### Test Drive 🚗
+
+```
+    // Array: [-2,1,-3,4,-1,2,1,-5,4]
+
+    // Step by step:
+    // i=0: maxSum=-2, currentSum=-2
+    // i=1: currentSum=max(1, -2+1)=1, maxSum=max(-2,1)=1
+    // i=2: currentSum=max(-3, 1-3)=-2, maxSum=max(1,-2)=1
+    // i=3: currentSum=max(4, -2+4)=4, maxSum=max(1,4)=4
+    // i=4: currentSum=max(-1, 4-1)=3, maxSum=max(4,3)=4
+    // i=5: currentSum=max(2, 3+2)=5, maxSum=max(4,5)=5
+    // i=6: currentSum=max(1, 5+1)=6, maxSum=max(5,6)=6 🎯
+    // i=7: currentSum=max(-5, 6-5)=1, maxSum=max(6,1)=6
+    // i=8: currentSum=max(4, 1+4)=5, maxSum=max(6,5)=6
+
+    // Result: 6 (subarray [4,-1,2,1])
+```
+
+### Complexity Comparison 📊
+
+| **Approach** | **Time** | **Space** | **Philosophy**            |
+| ------------ | -------- | --------- | ------------------------- |
+| Naive        | O(n²)    | O(1)      | "Check everything!" 🔍    |
+| Kadane’s     | O(n)     | O(1)      | "Learn from the past!" 🧠 |
+
+_**The Winner: Kadane's Algorithm! 🏆**_
+
+### Fun way to remember 🧠
+
+- _"Keep the treasure streak alive if positive, drop it if it turns into debt, always keep track of the richest journey."_
+- _"The key insight: Sometimes the best decision is to start fresh rather than dragging past baggage! ✨🎭"_

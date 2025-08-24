@@ -32,6 +32,7 @@ export default defineConfig({
               slug: "dsa/best-time-to-buy-or-sell-stocks",
             },
             { label: "Move Zeros", slug: "dsa/move-zeros" },
+            { label: "Maximum Subarray", slug: "dsa/max-subarray-sum" },
           ],
         },
         {
@@ -98,6 +99,14 @@ export default defineConfig({
                   label: "useMemo & useCallback",
                   slug: "react/interviews/usememo-usecallback",
                 },
+                {
+                  label: "Context API vs Redux Toolkit",
+                  slug: "react/interviews/context-api-vs-redux",
+                },
+                {
+                  label: "Promises vs async/await",
+                  slug: "react/interviews/promises-async-await",
+                },
               ],
             },
           ],
@@ -112,13 +121,21 @@ export default defineConfig({
                   label: "Event Loop",
                   slug: "node/interviews/event-loop",
                 },
+                {
+                  label: "Express Middleware",
+                  slug: "node/interviews/express-middleware",
+                },
+                {
+                  label: "Session vs JWT",
+                  slug: "node/interviews/session-vs-jwt",
+                },
                 // {
-                //   label: "useState vs useRef vs useReducer",
-                //   slug: "react/interviews/usestate-useref-usereducer",
+                //   label: "Streams",
+                //   slug: "node/interviews/streams",
                 // },
                 // {
-                //   label: "useEffect with Cleanup",
-                //   slug: "react/interviews/use-effect",
+                //   label: "Cluster Module",
+                //   slug: "node/interviews/cluster-module",
                 // },
               ],
             },

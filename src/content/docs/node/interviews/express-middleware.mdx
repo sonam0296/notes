@@ -1,0 +1,79 @@
+---
+title: Express Middleware
+---
+
+### 🔹 What is Middleware in Express?
+
+- Middleware functions in Express is a functions that runs between the incoming request(`req`) and an outgoing response(`res`).
+- They can:
+  - Access the request(`req`) and response(`res`) objects.
+  - Modify them.
+  - End the request-response cycle.
+  - Or pass control to the next middleware using `next()`.
+- Think of them as **layers of functions** that request passess through before reaching the final handler.
+
+### 🔹 Syntax
+
+```
+    app.use((req, res, next) => {
+        console.log('Middleware function executed.');
+        next();             // Pass control to the next middleware
+    })
+```
+
+### 🔹 Types of Middleware
+
+- **Application-level Middleware** ->
+  - Attach directly to the Express `app` object.
+  - Eg:
+    ```
+      app.use((req, res, next) => {
+          console.log("Application Middleware");
+          next();
+      });
+    ```
+- **Router-level Middleware** ->
+  - Works the same but bounds to an Express router.
+  - Eg:
+    ```
+        const router = Router()
+        router.use((req, res, next)=>{
+            console.log('Router Middleware');
+            next();
+        })
+    ```
+- **Built-in Middleware** ->
+  - Examples:
+    - `express.json()` → parse JSON bodies.
+    - `express.urlencoded({ extended: true })` → parse URL-encoded bodies.
+    - `express.static('public')` → serve static files.
+- **Third Party Middleware** ->
+  - Examples:
+    - `morgan` → logging
+    - `cors` → handling cross-origin requests.
+    - `cookie-parser` → parsing cookies.
+    ```
+        const cors = require('cors')
+        app.use(cors())
+    ```
+- **Error Handling Middleware** ->
+
+  - Special middleware with 4 parameters `(err, req, res, next)`.
+  - Eg:
+    ```
+        app.use((err, req, res, next)=>{
+            console.error(err.stack)
+            res.status(500).send('Something breaks!')
+        })
+    ```
+
+- 👉 Request Flow: **Client → Middleware 1 → Middleware 2 → Route Handler → Response**
+
+### 🔹 When to use Middleware?
+
+- **Logging requests** (morgan, custom loggers).
+- **Authentication/Authorization** (check tokens, user roles).
+- **Parsing data** (JSON, forms, cookies).
+- **Error handling** (catch errors in routes).
+- **Serving static files** (images, CSS, JS).
+- **Rate limiting / Security checks**.

@@ -1,0 +1,149 @@
+---
+title: Context API V/s Redux Toolkit
+---
+
+Context API vs Redux Toolkit in React — both are used for state management, but they solve slightly different problems.
+
+### ⚡ Context API
+
+- ✅ What it is:
+  - A **built-in feature** in React for passing data through the component tree without prop drilling.
+  - Good for **small or medium apps** where global state is limited. (eg: theme, user auth, language, etc)
+- ✅ How it works:
+  - Create a `context`.
+  - Wrap the component with a `Provider` to share state.
+  - Consume state using `useContext`.
+- Example:
+
+  ```
+      const ThemeContext = React.createContext();
+      const App = () => {
+          const [theme, setTheme] = React.useState('light')
+          return(
+              <ThemeContext.Provider value={{theme, setTheme}}>
+                  <Child/>
+              </ThemeContext.Provider>
+          )
+      }
+
+      const Child = () => {
+          const {theme, setTheme} = React.useContext(ThemeContext)
+          return (
+              <div>
+                  <p>Current theme: {theme}</p>
+                  <button onClick={() => setTheme("dark")}>Dark Mode</button>
+              </div>
+          )
+      }
+  ```
+
+- 👉 Use when you need simple global state sharing without extra libraries.
+
+### ⚡ Redux Toolkit
+
+- ✅ What it is:
+  - A **state management** library built on top of Redux.
+  - Solves issues like **boilerplate, immutability and complex reducers**.
+  - Best for **large apps** with complex state logic (API data, caching, user flows).
+- ✅ How it works:
+  - Create a store using `configStore`.
+  - Create slices (`createSlice`) with reducers.
+  - Use `useSelector` to read and `useDispatch` to update state.
+- Example:
+
+```
+    // Import
+    import {createSlice, configStore} from '@reduxjs/toolkit';
+    import {useSelector, useDispatch, Provider} from 'react-redux'
+
+    const themeSlice = createSlice({
+        name: 'theme',
+        initialState: {value: 'light'},
+        reducers: {
+            setDark: (state) => {state.value = 'dark' },
+            setLight: (state) => {state.value = 'light' }
+        }
+    })
+
+    const store = configStore({reducer: {theme: themeSlice.reducers}});
+
+    const App = () => {
+        return (
+            <Provider store={store}>
+                <Child/>
+            </Provider>
+        )
+    }
+
+    const Child = () => {
+        const dispatch = useDispatch()
+        const theme = useSelector((state)=> state.theme.value)
+        return (
+            <>
+                <p>Theme: {theme}</p>
+                <button onClick={()=> {dispatch(themeSlice.actions.setDark())}}>Dark Mode</button>
+            </>
+        )
+    }
+```
+
+- 👉 Use when your app has complex state, **many components depending on the same data**, or you need **predictable state debugging (Redux DevTools)**.
+
+### ⚖️ Quick Comparison
+
+| Feature               | Context API                            | Redux Toolkit                           |
+| --------------------- | -------------------------------------- | --------------------------------------- |
+| Built-in or external? | ✅ Built into React                    | ❌ External library                     |
+| Boilerplate           | Low                                    | Medium (simplified by RTK)              |
+| Debugging tools       | ❌ None                                | ✅ Redux DevTools                       |
+| Async handling (API)  | ❌ Manual                              | ✅ Built-in with `createAsyncThunk`     |
+| Best for              | Small/medium apps, simple global state | Large/complex apps, scalable state mgmt |
+
+### 🧠 Interview One-liner
+
+_"I use Context API for small-scale state like theme or auth. For large apps with complex logic I prefer Redux toolkit
+because it gives structure, middleware and DevTools for debugging."_
+
+### ⚡ Context API vs Redux Toolkit – Interview Scenarios
+
+- Q1: **Your app only needs to share a logged-in user’s info (name, email, role) across a few components. Which would you use?**
+
+  - 👉 Answer: Context API.
+  - Because it’s lightweight, built-in, and enough for small state like auth or theme. Redux Toolkit would be overkill.
+
+- Q2: **You’re building an e-commerce app with cart, products, filters, orders, and wishlists. Data updates frequently and many components depend on it. Which do you use?**
+
+  - 👉 Answer: Redux Toolkit.
+  - Because multiple components need the same state, updates are frequent, and you want debugging tools like Redux DevTools.
+
+- Q3: **You need to manage a dark/light theme toggle across the app. Which do you use?**
+
+  - 👉 Answer: Context API.
+  - Simple global state → Context API is perfect.
+
+- Q4: **Your app fetches data from APIs (e.g., product list, user details) and you want to handle loading, success, and error states. Which do you use?**
+
+  - 👉 Answer: Redux Toolkit.
+  - Because createAsyncThunk + slices make API state management clean and predictable.
+
+- Q5: **Your app has only 2–3 global states, but you want time-travel debugging to track how state changed over time. Which do you use?**
+
+  - 👉 Answer: Redux Toolkit.
+  - Redux DevTools allow you to inspect, replay, and debug state changes.
+
+- Q6: **You are working in a team project where multiple developers need consistent state structure and maintainability. Which do you use?**
+
+  - 👉 Answer: Redux Toolkit.
+  - Because it enforces structured state management and reduces bugs.
+
+### ⚡ Quick Rule of Thumb
+
+- ✅ Use **Context API** for → Auth state, theme toggles, language, or when state is small and simple.
+- ✅ Use **Redux Toolkit** for → Large apps, async API data, debugging, and team projects.
+
+### 🧠 Interview Trick Question
+
+- Q: **“Can Context API completely replace Redux?”**
+  - 👉 Answer:
+    _“Not really. Context API only solves prop drilling. It doesn’t provide middleware, async handling, or debugging
+    tools like Redux Toolkit. For small state → Context is fine, but for scalable apps → Redux Toolkit is better.”_

@@ -69,11 +69,10 @@ title: ⚡ Event Loop in Browser JS vs Node.js
 ```
 
 - 👉 Explanation:
-
-- `process.nextTick` → highest priority.
-- Then `Promise.then` (microtask).
-- Then `setTimeout` (timer phase).
-- Then `setImmediate` (check phase).
+  - `process.nextTick` → highest priority.
+  - Then `Promise.then` (microtask).
+  - Then `setTimeout` (timer phase).
+  - Then `setImmediate` (check phase).
 
 ### ⚡ Key Differences: Browser vs Node.js
 

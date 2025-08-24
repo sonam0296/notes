@@ -1,0 +1,88 @@
+---
+title: Session vs JWT
+---
+
+### 🔹 1. Session-based Authentication
+
+- Sessions store user data on the **server**
+- ⚙️ **How it works:**
+  - User logs in with email & password.
+  - Server creates a **session** and stores it(in-memory, Redis, db, etc)
+  - Server sends a **session ID** to the client in a cookie.
+  - On subsequent requests, the browser automatically sends the cookie.
+  - Server checks the session store -> verifies user -> allows/denies access.
+- ✅ **Pros:**
+  - Simple to implement.
+  - Can store complex user data on server.
+  - Easy to invalidate session (logout = delete session from store.)
+- ❌ **Cons:**
+  - Server-side stateful -> server must store sessions. (can become heavy for large apps)
+  - Scaling requires **sticky sessions** or a distributed session store (eg: Redis).
+  - Cookies are vulnerable if not secured properly. (`httpOnly`, `secure`, `SameSite`)
+- Eg:
+
+```
+    import express from 'express'
+    import session from 'express-session'
+
+    const app = express();
+    app.use(session({
+        secret: 'mysecret',
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false } // set true if using HTTPS
+    }))
+
+    app.get('/login', (req, res)=> {
+        req.session.user = {id: 1; name: 'Test'}
+        res.send('User logged in!')
+    })
+
+    app.get("/dashboard", (req, res) => {
+        if (req.session.user) {
+            res.send(`Welcome ${req.session.user.name}`);
+        } else {
+            res.send("Please log in.");
+        }
+    });
+```
+
+### 🔹 2. JWT (JSON Web Token) Authentication
+
+- JWT is a **stateless token-based authentication system**.
+- ⚙️ **How it works:**
+  - User logs in with email & password.
+  - Server generates a **JWT token(signed with secret/private key)** containing user info.
+  - Token is send to the client (usually in localStorage or Bearer token in headers).
+  - On subsequent requests, the client sends the token in the `Authorization` header.
+  - Server checks the token signature -> allows/denies access.
+- ✅ **Pros:**
+  - **Stateless** → no server storage required (great for microservices & scaling).
+  - Portable across multiple services (e.g., API Gateway + multiple microservices).
+  - Works well for mobile apps, SPAs (React, Angular, Vue).
+  - Tokens can carry custom claims (e.g., role, permissions).
+- ❌ **Cons:**
+  - Tokens can be **stolen** → must secure with HTTPS.
+  - **Difficult to revoke** (until token expires).
+  - JWTs can become large (since they store payload inside).
+
+### 🔹 Key Differences
+
+| Feature        | **Session**                            | **JWT**                                 |
+| -------------- | -------------------------------------- | --------------------------------------- |
+| **Storage**    | Stored on server (stateful)            | Stored on client (stateless)            |
+| **Scaling**    | Harder (needs Redis/DB)                | Easier (no server storage)              |
+| **Revocation** | Easy (delete session)                  | Hard (must expire or use blacklist)     |
+| **Use case**   | Traditional web apps (server-rendered) | APIs, SPAs, mobile apps                 |
+| **Transport**  | Cookie-based                           | Usually `Authorization: Bearer <token>` |
+
+### 🔹 When to Use What?
+
+- ✅ Use Sessions when:
+  - Small/medium apps.
+  - You want easy `logout` & session management.
+  - App is `server-rendered`.
+- ✅ Use JWT when:
+  - Large-scale, distributed, or **microservices architecture**.
+  - Stateless apps (React, Angular, Vue frontends).
+  - Mobile apps or cross-platform APIs.
