@@ -33,6 +33,10 @@ export default defineConfig({
             },
             { label: "Move Zeros", slug: "dsa/move-zeros" },
             { label: "Maximum Subarray", slug: "dsa/max-subarray-sum" },
+            {
+              label: "Longest Substring Without Repeating Characters",
+              slug: "dsa/longest-substring-without-repeating-chars",
+            },
           ],
         },
         {
@@ -60,6 +64,14 @@ export default defineConfig({
                 {
                   label: "Closures & Lexical Scope",
                   slug: "js/interviews/closure-lexical-scope",
+                },
+                {
+                  label: "ES6+ features",
+                  slug: "js/interviews/es6-features",
+                },
+                {
+                  label: "OOP in JS (classes, inheritance, polymorphism)",
+                  slug: "js/interviews/oop-in-js",
                 },
                 // {
                 //   label: "Prototypes & Inheritance",
@@ -107,6 +119,14 @@ export default defineConfig({
                   label: "Promises vs async/await",
                   slug: "react/interviews/promises-async-await",
                 },
+                {
+                  label: "SSR vs SSG vs ISR",
+                  slug: "react/interviews/ssr-vs-ssg-vs-isr",
+                },
+                {
+                  label: "React Performance optimization",
+                  slug: "react/interviews/react-performance-optimization",
+                },
               ],
             },
           ],
@@ -128,6 +148,14 @@ export default defineConfig({
                 {
                   label: "Session vs JWT",
                   slug: "node/interviews/session-vs-jwt",
+                },
+                {
+                  label: "OAuth vs SSO",
+                  slug: "node/interviews/oauth-vs-sso",
+                },
+                {
+                  label: "Rate limiting & Caching",
+                  slug: "node/interviews/rate-limiting-caching",
                 },
                 // {
                 //   label: "Streams",

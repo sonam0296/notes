@@ -1,0 +1,157 @@
+---
+title: OOP in JS (classes, inheritance, polymorphism)
+---
+
+### 🔹 1. Classes
+
+- Classes are blueprint for creating objects. They support constructors, methods and properties.
+- Example:
+
+```
+    class Person {
+        constructor(name, age){
+            this.name = name;
+            this.age = age
+        }
+        greet() => {
+            console.log(`My name is ${this.name}  and I'm ${this.age} yrs old.`)
+        }
+    }
+
+    const person = new Person('Sonam', '26')
+    person.greet() // My name is Sonam and I'm 26 yrs old.
+```
+
+### 🔹 2. Inheritance
+
+- One class can extend another, reusing its properties and methods.
+- Example:
+
+```
+    class Developer extends Person {
+        constructor(name, age, role){
+            super(name, age)            // call parent constructor
+            this.role = role
+        }
+        code(){
+            console.log(`${this.name} is coding as a ${this.role}`)
+        }
+    }
+
+    const dev = new Developer('Sonam', 26, 'Full Stack Developer')
+    dev.code()      // Sonam is coding as a Full Stack Developer
+```
+
+### 🔹 3. Polymorphism
+
+- Methods can be overriden in child classes to provide specialized behaviour.
+- Example:
+
+```
+    class Animal {
+        speak() {
+            console.log("The animal makes a sound.");
+        }
+    }
+
+    class Dog extends Animal {
+        speak() {
+            console.log("🐶 The dog barks.");
+        }
+    }
+
+    class Cat extends Animal {
+        speak() {
+            console.log("🐱 The cat meows.");
+        }
+    }
+
+    const animals = [new Dog(), new Cat(), new Animal()];
+    animals.forEach(a => a.speak());
+    // 🐶 The dog barks.
+    // 🐱 The cat meows.
+    // The animal makes a sound.
+```
+
+### 🔹 4. Encapsulation
+
+- 👉 Hiding internal details and exposing only what’s necessary.
+
+  - Achieved using class fields (`#private`) and getter/setter methods.
+  - Eg:
+
+    ```
+        class BankAccount {
+        #balance = 0; // private property
+
+        deposit(amount) {
+        if (amount > 0) this.#balance += amount;
+        }
+
+        withdraw(amount) {
+        if (amount <= this.#balance) this.#balance -= amount;
+        else console.log("Insufficient balance");
+        }
+
+        get balance() { // getter
+        return this.#balance;
+        }
+        }
+
+        const acc = new BankAccount();
+        acc.deposit(100);
+        acc.withdraw(50);
+        console.log(acc.balance); // 50
+        // console.log(acc.#balance); ❌ Error (private)
+    ```
+
+  - ✅ Keeps sensitive data safe and controlled.
+
+### 🔹 5. Abstraction
+
+- 👉 Hiding complex implementation and showing only the essential functionality.
+
+  - In JS, done via abstract-like base classes or interfaces (TS).
+  - Eg:
+
+  ```
+      class Vehicle {
+          startEngine() {
+              throw new Error("startEngine() must be implemented");
+          }
+      }
+
+      class Car extends Vehicle {
+          startEngine() {
+              console.log("🚗 Car engine started");
+          }
+      }
+
+      const c = new Car();
+      c.startEngine(); // 🚗 Car engine started
+  ```
+
+  - ✅ Forces subclasses to implement required methods, hiding complexity.
+
+### 🎯 Summary Table
+
+| Pillar        | Meaning                         | Example in JS              |
+| ------------- | ------------------------------- | -------------------------- |
+| Encapsulation | Hide internal details           | Private fields `#balance`  |
+| Abstraction   | Show only essentials            | Abstract base `Vehicle`    |
+| Inheritance   | Reuse functionality             | `class Dog extends Animal` |
+| Polymorphism  | Same method, different behavior | `speak()` in Dog/Cat/Bird  |
+
+### 🔹 Summary
+
+- **Class ->** Blueprint for object.
+- **Inheritance ->** Reuse properties/methods via `extends`
+- **Polymorphism ->** Same method, different behaviour in subclasses.
+
+## 👉 In real-world JS/TS (Node.js, React):
+
+- Classes are used for models (like `User`, `Product`).
+- Inheritance for specialized classes (like `AdminUser` extends `User`).
+- Polymorphism for overriding behavior (like `render()` in React components).
+- Encapsulation → Hide DB logic inside classes (e.g., `UserModel`).
+- Abstraction → Base service classes, interfaces.

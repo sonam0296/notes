@@ -1,0 +1,62 @@
+---
+title: ES6+ features
+---
+
+### 🔹 1. Spread Operator (...)
+
+- 👉 Expands elements of an array or object into another array/object.
+
+```
+    // Arrays
+    const arr1 = [1,2,3]
+    const arr2 = [...arr1, 4,6]
+    console.log(arr2) // [1,2,3,4,6]
+
+    // Object
+    const obj = {name: 'Sonam'}
+    const newObj = {...obj, role: 'Developer'}
+    console.log(newObj) // {name: 'Sonam', role: 'Developer'}
+```
+
+- ✅ **Use case**: Cloning, merging, passing multiple values quickly.
+
+### 🔹 2. Rest Operator (...)
+
+- 👉 Collects remaining items into an array/object. (Opposite of spread.)
+
+```
+    // functions
+    function sum(...nums){
+        return nums.reduce((acc, curr)=> {acc+curr}, 0)
+    }
+
+    // Destructing
+    const [a,b, ...rest] = [10,20,30,40]
+    console.log(a,b) // 10, 20
+    console.log(rest) // [30,40]
+```
+
+-✅ **Use case**: Flexible function arguments, grouping leftovers.
+
+### 🔹 3. Destructuring
+
+- 👉 Extracts values from arrays or objects into variables.
+
+```
+    // Arrays
+    const colors = ['red', 'blue', 'black']
+    const [first, , third] = colors;     // red
+
+    // Object
+    const person = {name: 'Test', role: 'Tester'}
+    const {name, role} = person
+    console.log(name, role)             // Test, Tester
+```
+
+- ✅ **Use case**: Cleaner code, avoid repetitive property access.
+
+### 🔹 Summary
+
+- **Spread (...)** → expands values.
+- **Rest (...)** → collects values.
+- **Destructuring** → extracts values.

@@ -1,0 +1,82 @@
+---
+title: Rate limiting & Caching
+---
+
+### 🔹 1. Rate Limiting
+
+- Rate limiting = restricting the number of requests a user/client can make in a given time period.
+- ✅ Helps prevent **DDoS attacks, brute force login attempts, or API Abuse**.
+- Express Example (using `express-rate-limit`):
+
+```
+    const express = require('express')
+    const rateLimit = require('express-rate-limit')
+    const app = express()
+
+    // Apply rate limiting middleware
+    const limiter = rateLimit({
+        windowMs: 1*60*1000,    // 1 minute
+        max: 5,                 // limit each IP to 5 request per window
+        message: "Too many requests, please try again later."
+    })
+
+    app.use('/api/', limiter)   // apply to all api's
+
+    app.get('/api/app', (req, res)=>{
+        res.send("This is a rate-limited data")
+    })
+
+    app.listen(3000, ()=> console.log('Server is running on 3000!'))
+```
+
+- ⚡ Behind the scene :
+  - Keeps track of each requests per IP.
+  - Resets count after the `windowMs` expires.
+- 👉 For distributed apps (multiple servers), use **Redis** as a store (`rate-limit-redis`).
+
+### 🔹 2. Caching
+
+- Caching = storing frequently requested data in **memory** so you don't hit the DB every time.
+- ✅ Helps reduce **latency** and **DB load**.
+- Example Redis Caching (distributed, scalable):
+
+```
+    const express = require('express');
+    const {createClient} = require('redis')
+
+    const app = express()
+    const redisClient = createClient()
+    redisClient.connect()
+
+    // middleware
+    async function cacheMiddleware(req, res, next){
+        const key = req.originalUrl;
+        const cachedData = await redisClient.get(key)
+        if(cachedData){
+            return res.json(JSON.parse(cachedData))
+        }
+        next()
+    }
+
+    app.get('products', async(req, res) => {
+        // Simulate DB fetch
+        const products = [{ id: 1, name: "Laptop" }, { id: 2, name: "Phone" }];
+        await redisClient.setEx(req,originalUrl, 60, JSON.stringify(products))      // Cache for 60s
+        return res.json(products)
+    })
+
+    app.listen(3000, ()=> console.log("Server runing on 3000"))
+```
+
+### 🔹 3. Where They Fit
+
+- **Rate Limiting ->** Protects API from being overwhelmed.
+- **Caching ->** Makes response faster and reduces database load.
+- 👉 Best practice: use both together. Example:
+  - Rate-limit login routes.
+  - Cache frequently accessed data (like product lists, user profiles, reports).
+
+### ⚡ Real-world analogy:
+
+- **Rate Limiting** = A club bouncer → “Only 100 people allowed inside per hour.”
+- **Caching** = A fast-food restaurant → keeps fries ready so they don’t cook each time.

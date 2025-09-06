@@ -1,0 +1,79 @@
+---
+title: ⚡ SSR vs SSG vs ISR in React (Next.js)
+---
+
+### 🔹 1. SSR (Server-Side Rendering)
+
+- Page is **render on server** for every request.
+- Always fresh data, but slower than static.
+- ✅ Use case: Pages with personalized / frequently changing data (e.g., dashboards, logged-in profile, admin pages).
+- Example :
+
+```
+    // pages/index.js
+    export async function getServerSideProps() {
+        const res = await fetch("https://api.example.com/data");
+        const data = await res.json();
+        return { props: { data } };
+    }
+```
+
+- 👉 Each request → Next.js runs `getServerSideProps` → HTML generated → sent to browser.
+
+### 🔹 2. SSG (Static Site Generation)
+
+- Page is **built at compile time (build step)**.
+- Super fast (just HTML + JS served from CDN).
+- Data is **frozen at build time**.
+- ✅ Use case: Pages with rarely changing data (e.g., blog posts, docs, landing pages).
+- Example :
+
+```
+    // pages/index.js
+    export async function getStaticProps() {
+        const res = await fetch("https://api.example.com/data");
+        const data = await res.json();
+        return { props: { data } };
+    }
+```
+
+- 👉 Runs **once during build** → HTML + JSON cached on CDN → instant load.
+
+### 🔹 3. ISR (Incremental Static Regeneration)
+
+- Hybrid between **SSG + SSR**.
+- Page is built at built time, but can be **re-generated in the background** after a set time.
+- Users always get **fast static page**, but data updates periodically.
+- ✅ Use case: Pages with **semi-dynamic data** (e.g., product listings, news site).
+- Example :
+
+```
+    // pages/index.js
+    export async function getStaticProps() {
+        const res = await fetch("https://api.example.com/data");
+        const data = await res.json();
+        return {
+            props: { data },
+            revalidate: 60, // re-generate every 60s
+        };
+    }
+```
+
+- 👉 First request → old cached page served.
+- 👉 Background → page regenerated.
+- 👉 Next user → gets updated page.
+
+### ⚖️ Comparison Table
+
+| Feature        | SSR (Server-Side)       | SSG (Static Site)        | ISR (Incremental Static)            |
+| -------------- | ----------------------- | ------------------------ | ----------------------------------- |
+| Render timing  | Every request           | At build time            | At build + revalidated later        |
+| Performance    | ❌ Slower (server work) | ✅ Fast (CDN cached)     | ✅ Fast (CDN cached + refresh)      |
+| Data freshness | ✅ Always fresh         | ❌ Stale if data changes | ⚡ Semi-fresh (updates on interval) |
+| Use cases      | Dashboards, auth pages  | Blogs, docs, marketing   | Product pages, news feeds           |
+
+### 🧠 Interview One-liners
+
+- _“SSR fetches fresh data on each request but is slower.”_
+- _“SSG pre-builds pages at compile time for maximum speed, but content is frozen until rebuild.”_
+- _“ISR combines both: pages are cached like static but periodically refreshed in the background.”_

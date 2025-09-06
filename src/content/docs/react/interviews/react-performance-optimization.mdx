@@ -1,0 +1,99 @@
+---
+title: ⚡ React Performance Optimization
+---
+
+### 🔹 1. Prevent Unnecessary Re-renders
+
+- Use `React.memo()` for pure functional components.
+- Use `useCallback()` hook to memoize the functions passed as props.
+- Use `useMemo()` hook to memoize expensive computations.
+- Example:
+
+```
+    const Child = React.memo(({onClick}) => {
+        console.log('Child component rendered')
+        return <button onClick={onClick}>Child onClick</button>
+    })
+
+    export const App = () => {
+        const [count, setCount] = useState(0)
+        const handleClick = useCallback(() => {
+            console.log('Clicked')
+        }, [])
+
+        return (
+            <>
+                <button onClick={()=> setCount(c=> c+1)}>Parent {count}</button>
+                <Child onClick={handleClick}/>
+            </>
+        )
+    }
+```
+
+- ✅ Without memoization → `Child` re-renders every time parent updates.
+- ✅ With memoization → `Child` only re-renders if props change.
+
+### 🔹 2. Code Splitting & Lazy Loading
+
+- Example:
+
+```
+    const HeavyComponent = React.lazy(()=> import('./HeavyComponent'))
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <HeavyComponent/>
+        </React.Suspense>
+    )
+```
+
+- ✅ Load components **on demand**, reduce initial bundle size.
+
+### 🔹 3. Virtualization for Large Lists
+
+- Use `react-window` or `react-virtualized` for rendering long lists(instead of rendering thousands of DOM nodes).
+
+### 🔹 4. Avoid Expensive Operations in Render
+
+- Move heavy computations outside render or memoize them using `useMemo`.
+
+### 🔹 5. Optimize State Management
+
+- Keep state **as local as possible**.
+- Avoid keeping derived data in state(compute it).
+- Split large context(avoid re-renders of all children).
+
+### 🔹 6. Use Production Build
+
+- `npm run build`
+- ✅ Minified, optimized, tree-shaken.
+
+### 🔹 7. Avoid Inline Functions / Objects
+
+- Bad 👎:
+  `<Child data={{ a: 1 }} />`
+- Good 👍 (useMemo):
+  `
+  const data = useMemo(() => ({ a: 1 }), []);
+  <Child data={data} />`
+
+### ⚡ Review of All Major Hooks
+
+| Hook                          | Purpose                                                  | Example Use Case                        |
+| ----------------------------- | -------------------------------------------------------- | --------------------------------------- |
+| `useState`                    | Local state management                                   | Counter, input fields                   |
+| `useEffect`                   | Side effects (fetching, subscriptions, DOM ops)          | API call on mount                       |
+| `useContext`                  | Share state without prop drilling                        | Auth, theme                             |
+| `useReducer`                  | Complex state logic (like Redux lite)                    | Form with multiple fields               |
+| `useRef`                      | Persist values across renders without causing re-renders | DOM refs, store timers                  |
+| `useMemo`                     | Memoize **values**                                       | Expensive calculations                  |
+| `useCallback`                 | Memoize **functions**                                    | Prevent child re-renders                |
+| `useLayoutEffect`             | Sync side effects before browser paints                  | Measure DOM size before rendering       |
+| `useImperativeHandle`         | Customize ref values when using `forwardRef`             | Expose only specific methods from child |
+| `useTransition` (React 18)    | Mark state updates as “non-urgent”                       | Input filtering                         |
+| `useDeferredValue` (React 18) | Defer a value until less busy                            | Typeahead search                        |
+
+### 🧠 Interview One-liners
+
+- _"For performance optimization, I use memoization (`useMemo`, `useCallback`, `React.memo`), code splitting, and virtualization for long list"_.
+- _"React hooks give fine-grained control: `useState` for local state, `useEffect` for side effects, `useReducer` for
+  complex state, `useContext` for global state and optimization hooks like `useMemo` and `useCallback`"_.

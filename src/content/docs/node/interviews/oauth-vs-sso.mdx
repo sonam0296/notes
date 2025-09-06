@@ -1,0 +1,86 @@
+---
+title: OAuth vs SSO
+---
+
+### 🔹 1. OAuth (Open Authorization)
+
+- OAuth is an **authorization protocol** that allows one app to access resources (like data or APIs) from another
+  app **on behalf of the user**, without sharing credentials.
+
+##### ⚙️ How it works (OAuth 2.0 flow – simplified):
+
+- 1. User clicks **Login with Google** on your app.
+- 2. Your app will redirect user to **Google's OAuth server**.
+- 3. User logs into Google and give consent (e.g., "allow access to email").
+- 4. Google sends an **authorization code** back to your app.
+- 5. Your app exchange the code for an **access token**.
+- 6. Your app uses the access token to call Google API's (e.g., fetch user profile).
+
+##### ✅ Pros:
+
+- Delegated access(your app doesn't see the user's Google password).
+- Secure ways for apps to interact with each other.
+- Scopes (fine-grained access control: email, profile, calendar, etc.).
+
+##### ❌ Cons:
+
+- Can be complex to implement correctly.
+- Only handle **authorization**, not authentication by itself (though OpenID Connect adds authentication).
+
+#### Example:
+
+- “Allow Spotify to access your Google contacts” → That’s OAuth.
+
+### 🔹 2. SSO (Single Sign-On)
+
+- SSO is an **authentication method** that allows user to log in **once** and gain access to **multiple apps** without
+  logging in again.
+
+##### ⚙️ How it works:
+
+- You log in once at a **central identity provider(IdP)** (eg. Okta, Microsoft, Google).
+- The IdP creates a **session/token** for you.
+- When you access another app that trusts the same IdP, you're already authenticated.
+- You don't need to enter your credentials again -> you're automatically logged in.
+
+##### ✅ Pros:
+
+- Great user experience (one login for many apps).
+- Centralized authentication (security, policies in one place).
+- Works with SAML, OAuth, OpenID Connect under the hood.
+
+##### ❌ Cons:
+
+- If the IdP goes down → all apps are affected.
+- Single point of attack if not secured properly.
+
+#### Example:
+
+- You log in to your company portal → automatically get access to Gmail, Slack, Jira, GitHub (all integrated via SSO).
+
+### 🔹 Key Differences
+
+| Feature         | **OAuth**                                          | **SSO**                                            |
+| --------------- | -------------------------------------------------- | -------------------------------------------------- |
+| **Purpose**     | Authorization (delegated access to resources)      | Authentication (log in once, access multiple apps) |
+| **Scope**       | API access (e.g., Google Drive, Spotify)           | User identity across apps                          |
+| **Who uses it** | Third-party apps (your app → Google/Facebook APIs) | Enterprises & organizations                        |
+| **Protocol**    | OAuth 2.0, OpenID Connect                          | Can use SAML, OAuth 2.0, OIDC                      |
+| **Example**     | “Allow Trello to access your Google Drive”         | Login once → access Gmail, Calendar, Drive         |
+
+### 🔹 How They Work Together
+
+- **OAuth** = lets apps access resources on your behalf.
+- **SSO** = lets you log in once for multiple apps.
+
+##### 👉 Many modern SSO systems **use OAuth (with OpenID Connect)** under the hood for authentication + authorization.
+
+#### For example:
+
+- Login with Google (SSO for all Google services) uses OAuth 2.0 + OpenID Connect.
+- Corporate SSO (Okta, Auth0, Azure AD) often uses SAML or OIDC.
+
+### ⚡ Real-world analogy:
+
+- **OAuth** = “I give my friend the house key only for the garage, not the whole house.”
+- **SSO** = “I unlock my house once, and all rooms are open for me.”
